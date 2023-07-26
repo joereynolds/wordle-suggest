@@ -105,7 +105,6 @@ def suggest(parsed_board):
         if is_correctly_positioned_letter_in_word(correct_letters, word):
             suggestions.append(word)
 
-
     return suggestions
 
 try:
