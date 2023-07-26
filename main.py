@@ -1,5 +1,26 @@
 import sys
 
+"""
+Gives you suggestions for the current state of a wordle board
+Pass a file to it and it'll spit out suggestions
+
+Notation is:
+    ! = Correct letter, correct place
+    ? = Correct letter, wrong place
+    - = Invalid letter
+
+i.e.
+
+A! U- D- I! O-
+
+would yield:
+    actin
+    again
+    anvil
+    attic
+    await
+"""
+
 
 def parse_board(wordle_file):
     return [line.split() for line in open(wordle_file)]
@@ -60,7 +81,6 @@ def suggest(parsed_board):
 
         if is_correctly_positioned_letter_in_word(correct_letters, word):
             suggestions.append(word)
-
 
     return suggestions
 
