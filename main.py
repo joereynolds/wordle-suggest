@@ -107,6 +107,12 @@ def suggest(parsed_board):
 
     return suggestions
 
+def print_suggestions(suggestions):
+    print(str(len(suggestions)), 'suggestions:')
+
+    for suggestion in suggestions:
+        print(suggestion.strip())
+
 try:
     wordle_file = sys.argv[1]
 except IndexError:
@@ -114,5 +120,4 @@ except IndexError:
 
 suggestions = suggest(parse_board(sys.argv[1]))
 
-print(suggestions)
-print(str(len(suggestions)), 'suggestions')
+print_suggestions(suggestions)
