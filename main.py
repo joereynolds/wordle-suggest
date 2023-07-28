@@ -32,6 +32,13 @@ def get_invalid_letters(parsed_board):
             if '-' in letter:
                 invalid_letters.append(letter[0])
 
+    # Pluck out invalid invalid letters (lol)
+    # if they're valid elsewhere on the board
+    for line in parsed_board:
+        for letter in line:
+            if letter[0] in invalid_letters and letter[1] in ['!', '?']:
+                invalid_letters.remove(letter[0])
+
     return invalid_letters
 
 def get_correctly_positioned_letters(parsed_board):
@@ -51,7 +58,6 @@ def get_incorrectly_positioned_correct_letters(parsed_board):
                 letters[letter[0]] = i
 
     return letters
-
 
 def is_invalid_letter_in_word(invalid_letters, word):
     for invalid_letter in invalid_letters:
@@ -80,30 +86,43 @@ def is_correct_letter_in_wrong_position(almost_correct_letters, word):
             if word[i] == letter.lower() and i == index:
                 return True
 
-def suggest(parsed_board):
-    board_word_limit = 5 + 1
+def is_correct_letter_in_word(letters, word):
+    for letter, position in letters.items():
+        if letter.lower() not in word:
+            return False
+    return True
+
+def suggest(parsed_board, wordlist):
+    board_word_limit = 5
     invalid_letters = get_invalid_letters(parsed_board)
     correct_letters = get_correctly_positioned_letters(parsed_board)
     almost_correct_letters = get_incorrectly_positioned_correct_letters(parsed_board)
 
     suggestions = []
+    best_suggestions = []
 
-    for word in open('popular.txt'):
+    for word in wordlist:
+        word = word.strip()
 
-        # Weed out anything not of valid length
         if len(word) != board_word_limit:
             continue
 
-        # Weed out stuff which has invalid letters in it
         if is_invalid_letter_in_word(invalid_letters, word):
             continue
 
-        # Weed out words if valid letters in the wrong place
         if is_correct_letter_in_wrong_position(almost_correct_letters, word):
             continue
 
+        if not is_correct_letter_in_word(almost_correct_letters, word):
+            continue
+
         if is_correctly_positioned_letter_in_word(correct_letters, word):
-            suggestions.append(word)
+            best_suggestions.append(word)
+
+        suggestions.append(word)
+
+    if best_suggestions:
+        return best_suggestions
 
     return suggestions
 
@@ -113,11 +132,14 @@ def print_suggestions(suggestions):
     for suggestion in suggestions:
         print(suggestion.strip())
 
-try:
-    wordle_file = sys.argv[1]
-except IndexError:
-    sys.exit("Please specify a txt file containing your wordle board so far")
+if __name__ == '__main__':
+    try:
+        wordle_file = sys.argv[1]
+    except IndexError:
+        sys.exit("Please specify a txt file containing your wordle board so far")
 
-suggestions = suggest(parse_board(sys.argv[1]))
-
-print_suggestions(suggestions)
+    suggestions = suggest(
+        parse_board(wordle_file),
+        open('popular.txt', 'r')
+    )
+    print_suggestions(suggestions)
