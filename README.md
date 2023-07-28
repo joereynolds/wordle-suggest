@@ -22,11 +22,18 @@ R? E! A! L- M-
 Would yield
 
 ```
-actin
-again
-anvil
-attic
-await
+11 suggestions:
+bears
+fears
+gears
+hears
+heart
+sears
+tears
+teary
+wears
+weary
+years
 ```
 
 ## Troubleshooting
