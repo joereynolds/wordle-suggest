@@ -7725,6 +7725,7 @@ ethic
 ethical
 ethically
 ethics
+ethos
 ethnic
 ethnicity
 ethyl
@@ -19484,6 +19485,7 @@ scouted
 scouting
 scouts
 scow
+scowl
 scrabble
 scram
 scramble
