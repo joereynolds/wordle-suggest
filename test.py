@@ -1,6 +1,6 @@
 import pytest
 
-import main as wordle
+import wordle
 
 @pytest.mark.parametrize("words, board, expected", [
     (

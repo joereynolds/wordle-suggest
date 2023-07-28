@@ -6,7 +6,7 @@ if __name__ == '__main__':
     try:
         wordle_file = sys.argv[1]
     except IndexError:
-        sys.exit("Please specify a txt file containing your wordle board so far")
+        sys.exit("Please pass a file containing your wordle board so far")
 
     suggestions = wordle.suggest(
         wordle.parse_board(wordle_file),

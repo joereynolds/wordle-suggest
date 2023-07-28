@@ -35,6 +35,24 @@ await
 
 In that case, the wordlist I'm using (popular.txt) does not contain that word. Raise a PR/Issue and I'll add it in.
 
+## Extras
+
+### Live refresh of your suggestions
+
+Use `entr`. I.e.
+
+```
+ls your-wordle-board | entr python3 main.py your-wordle-board
+```
+
+### Column output
+
+Pipe it to `column`
+
+```
+python3 main.py your-wordle-board | column
+```
+
 ## Tests
 
 Run in a venv
@@ -48,4 +66,4 @@ python3 -m pip install -r requirements.txt
 
 And then you can
 
-`pyest test.py`
+`pytest test.py`
