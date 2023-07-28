@@ -12007,6 +12007,7 @@ involving
 ion
 ions
 ipecac
+irate
 iris
 iron
 ironclad

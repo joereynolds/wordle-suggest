@@ -1,3 +1,5 @@
+from enum import Enum
+
 """
 Gives you suggestions for the current state of a wordle board
 Pass a file to it and it'll spit out suggestions
@@ -19,43 +21,33 @@ would yield:
     await
 """
 
+class LetterType(Enum):
+    INVALID = '-'
+    CORRECT = '!'
+    ALMOST = '?'
 
 def parse_board(wordle_file):
     return [line.split() for line in open(wordle_file)]
 
-def get_invalid_letters(parsed_board):
-    invalid_letters = []
+def get_letters_of_type(parsed_board, letter_type):
+    letters = {}
     for line in parsed_board:
-        for letter in line:
-            if '-' in letter:
-                invalid_letters.append(letter[0])
+        for i, letter in enumerate(line):
+            if letter_type in letter:
+                letters[letter[0]] = i
 
-    # Pluck out invalid invalid letters (lol)
-    # if they're valid elsewhere on the board
+    return letters
+
+def get_invalid_letters(parsed_board):
+    invalid_letters = get_letters_of_type(parsed_board, LetterType.INVALID.value)
+
+    # Pluck out invalid invalid letters if they're valid elsewhere on the board
     for line in parsed_board:
         for letter in line:
-            if letter[0] in invalid_letters and letter[1] in ['!', '?']:
-                invalid_letters.remove(letter[0])
+            if letter[0] in invalid_letters.keys() and letter[1] in ['!', '?']:
+                invalid_letters.pop(letter[0])
 
     return invalid_letters
-
-def get_correctly_positioned_letters(parsed_board):
-    letters = {}
-    for line in parsed_board:
-        for i, letter in enumerate(line):
-            if '!' in letter:
-                letters[letter[0]] = i
-
-    return letters
-
-def get_incorrectly_positioned_correct_letters(parsed_board):
-    letters = {}
-    for line in parsed_board:
-        for i, letter in enumerate(line):
-            if '?' in letter:
-                letters[letter[0]] = i
-
-    return letters
 
 def is_invalid_letter_in_word(invalid_letters, word):
     for invalid_letter in invalid_letters:
@@ -93,8 +85,8 @@ def is_correct_letter_in_word(letters, word):
 def suggest(parsed_board, wordlist):
     board_word_limit = 5
     invalid_letters = get_invalid_letters(parsed_board)
-    correct_letters = get_correctly_positioned_letters(parsed_board)
-    almost_correct_letters = get_incorrectly_positioned_correct_letters(parsed_board)
+    correct_letters = get_letters_of_type(parsed_board, LetterType.CORRECT.value)
+    almost_correct_letters = get_letters_of_type(parsed_board, LetterType.ALMOST.value)
 
     suggestions = []
     best_suggestions = []
